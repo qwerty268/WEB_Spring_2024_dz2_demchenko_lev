@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block content %}
+              {% include "layouts/question.html" with item=question %}
+
+            <hr style="border-width: 3px;">
+
+            {% for answer in answers %}
+                {% include "layouts/answer.html" with item=answer %}
+            {% endfor %}
+
+            <hr style="border-width: 3px;">
+            <form action="/" method="post">
+                <label for="inputAnswer" class="form-label">Answer</label>
+                <textarea class="form-control mb-3" id="inputAnswer" rows="3"
+                          placeholder="Input your answer"></textarea>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+{% endblock %}

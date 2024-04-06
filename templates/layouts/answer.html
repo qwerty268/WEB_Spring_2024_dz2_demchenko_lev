@@ -1,0 +1,25 @@
+{% load static %}
+
+<div class="card mb-3 w-100">
+    <div class="row g-0">
+
+        <div class="col-md-3 p-2">
+            <div class="border w-50 ratio ratio-1x1">
+                <img src="../static/img/test.jpg" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="input-group flex-nowrap mt-3">
+                <input type="number" value="5" class="form-control" aria-label="Username"
+                       aria-describedby="addon-wrapping">
+            </div>
+        </div>
+
+        <div class="col-md">
+            <div class="card-body">
+                <p class="card-text">{{ item.text }}</p>
+                <div class="mt-3">
+                    Correct
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
