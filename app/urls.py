@@ -11,4 +11,5 @@ urlpatterns = [
     path('registration', views.registration, name='registration'),
     path('ask', views.ask, name='ask'),
     path('tag/<str:tag>', views.get_by_tag, name='search_by_tag'),
+    path('logout', views.logout, name='logout'),
 ]

@@ -1,29 +1,30 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <link rel="stylesheet" href="../static/bootstrap-5.2.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'bootstrap-5.2.3-dist/css/bootstrap.min.css' %}">
 </head>
 <body>
 <header>
     <nav class="navbar navbar-expand-lg bg-body-tertiary bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">AskPupkin</a>
+            <a class="navbar-brand" href="{% url 'newest' %}" >AskDemchenko</a>
             <form class="d-flex " role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <div class="d-flex justify-content-between gap-3">
                 <div class="account_image">
-                    <img src="../static/img.jpg" width="50" height="50"/>
+                    <img src="{% static 'img/test.jpg' %}" width="50" height="50"/>
                 </div>
                 <div class="d-flex flex-column justify-content-between">
                     <div>Dr. Pepper</div>
                     <div>
-                        <a href="/settings.html">Settings</a>
-                        <a href="/logout.html">Log Out</a>
+                        <a href="{% url 'user_settings' %}">Settings</a>
+                        <a href="{% url 'logout' %}">Log Out</a>
                     </div>
                 </div>
 

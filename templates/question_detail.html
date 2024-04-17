@@ -2,12 +2,12 @@
 {% load static %}
 
 {% block content %}
-              {% include "layouts/question.html" with item=question %}
+              {% include "components/question.html" with item=question %}
 
             <hr style="border-width: 3px;">
 
             {% for answer in answers %}
-                {% include "layouts/answer.html" with item=answer %}
+                {% include "components/answer.html" with item=answer %}
             {% endfor %}
 
             <hr style="border-width: 3px;">

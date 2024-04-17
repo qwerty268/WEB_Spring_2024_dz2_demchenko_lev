@@ -5,7 +5,7 @@
 
         <div class="col-md-3 p-2">
             <div class="border w-50 ratio ratio-1x1">
-                <img src="../static/img/test.jpg" class="img-fluid rounded-start" alt="...">
+                <img src="{% static 'img/test.jpg' %}" class="img-fluid rounded-start" alt="...">
             </div>
             <div class="input-group flex-nowrap mt-3">
                 <input type="number" value="5" class="form-control" aria-label="Username"
@@ -15,7 +15,7 @@
 
         <div class="col-md">
             <div class="card-body">
-                <a href="{% url "question" item.id%} ">
+                <a href="{% url 'question' item.id%} ">
                     <h5 class="card-title">{{ item.title }}</h5>
                 </a>
                 <p class="card-text">{{ item.text }}</p>

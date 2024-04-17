@@ -4,6 +4,6 @@
 {% block content %}
 <h3>Tag: <span id="searchTag">{{ tag }}</span></h3>
 {% for question in questions %}
-    {% include "layouts/question_element.html" with item=question %}
+    {% include "components/question_element.html" with item=question %}
 {% endfor %}
 {% endblock %}
