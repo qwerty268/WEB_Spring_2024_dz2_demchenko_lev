@@ -1,5 +1,5 @@
 """
-ASGI config for askme_pupkin project.
+ASGI config for askme_demchenko project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'askme_pupkin.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'askme_demchenko.settings')
 
 application = get_asgi_application()
