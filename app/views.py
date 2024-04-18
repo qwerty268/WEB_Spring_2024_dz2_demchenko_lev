@@ -2,6 +2,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.shortcuts import render
 
+from app.models import QuestionManager, Question
+
 # Create your views here.
 
 QUESTIONS = [
@@ -26,12 +28,12 @@ def get_pagination(request, items):
 
 
 def hot(request):
-    page_obj = get_pagination(request, QUESTIONS)
+    page_obj = get_pagination(request, Question.objects.get_hot())
     return render(request, 'hot.html', {"questions": page_obj})
 
 
 def newest(request):
-    page_obj = get_pagination(request, QUESTIONS)
+    page_obj = get_pagination(request, QuestionManager.get_new())
     return render(request, 'new_questions.html', {"questions": page_obj})
 
 
