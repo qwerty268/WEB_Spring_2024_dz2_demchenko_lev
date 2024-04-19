@@ -34,7 +34,7 @@ class Command(BaseCommand):
 
         questions = []
         for i in range(ratio * 10):
-            question = Question(id=i, user=users[i // 10], title=f'Вопрос {i}', text=f'текс вопроса {i}')
+            question = Question(id=i, user=users[i // 10], title=f'Вопрос {i}', text=f'текст вопроса {i}')
             question.save()
             question.tags.add(tags[(i - 1) // 10])
             questions.append(question)

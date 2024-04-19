@@ -12,7 +12,7 @@ class QuestionManager(models.Manager):
         return self.order_by('-created_at')
 
     def get_hot(self):
-        return self.order_by('-rating', 'created_at')
+        return self.annotate(count=Count('questionlike')).order_by('-count', 'created_at')
 
     def get_by_tag(self, tag):
         tag_id = Tag.objects.get(name=tag).id
