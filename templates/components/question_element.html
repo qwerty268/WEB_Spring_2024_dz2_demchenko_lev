@@ -23,12 +23,11 @@
                     <a href="#">answer(3)</a>
                     <div class="d-flex flex-wrap card_tags gap-3 w-100">
                         <span>Tags :</span>
-                        <a href="#">tag1</a>
-                        <a href="#">tag2</a>
-                        <a href="#">tag3</a>
-                        <a href="#">tag4</a>
-                        <a href="#">tag5</a>
-                        <a href="#">tag6</a>
+                       <a href="{% url 'search_by_tag' 'tag1' %}">tag1</a>
+                        <a href="{% url 'search_by_tag' 'tag2' %}">tag2</a>
+                        <a href="{% url 'search_by_tag' 'tag3' %}">tag3</a>
+                        <a href="{% url 'search_by_tag' 'tag4' %}">tag4</a>
+                        <a href="{% url 'search_by_tag' 'tag5' %}">tag5</a>
                     </div>
                 </div>
             </div>
