@@ -4,7 +4,7 @@
 {% block content %}
 <div class="d-flex flex-row align-items-center gap-4">
     <h3>Hot Question</h3>
-    <a href="/">New Questions</a>
+    <a href="{% url 'newest' %}">New Questions</a>
 </div>
 {% for question in questions %}
     {% include "components/question_element.html" with item=question %}
