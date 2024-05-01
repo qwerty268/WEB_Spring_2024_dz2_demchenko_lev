@@ -1,7 +1,13 @@
+from django.contrib import auth
+from django.contrib.auth import authenticate, logout, login
+from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, Http404, HttpResponseBadRequest
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.views.decorators.http import require_http_methods
 
+from app.forms import LoginForm, RegistrationForm
 from app.models import QuestionManager, Question, Answer
 
 
@@ -22,6 +28,7 @@ def hot(request):
 
 
 def newest(request):
+
     page_obj = get_pagination(request, Question.objects.get_new())
     return render(request, 'new_questions.html', {"questions": page_obj})
 
@@ -36,12 +43,43 @@ def question(request, question_id):
     return render(request, 'question_detail.html', {"question": item, "answers": answers})
 
 
-def login(request):
-    return render(request, 'login.html')
+@require_http_methods(['GET', 'POST'])
+def login_view(request):
+    if request.method == 'POST':
+        login_form = LoginForm(data=request.POST)
+
+        if login_form.is_valid():
+            user = authenticate(request, **login_form.cleaned_data)
+            if user is not None:
+                login(request, user)
+                return redirect(reverse('newest'))
+            else:
+                login_form.add_error(None, "Ошибка в логине или в пароле")
+                return render(request, 'login.html',
+                              {"form": login_form})
+        else:
+            login_form.add_error(login_form.username, "Некорректно введены данные")
+            return render(request, 'login.html',
+                          {"form": login_form})
+
+    login_form = LoginForm()
+    return render(request, 'login.html', {"form": login_form})
 
 
+@require_http_methods(['GET', 'POST'])
 def registration(request):
-    return render(request, 'registration.html')
+    if request.method == 'GET':
+        return render(request, 'registration.html', {"form": RegistrationForm()})
+    else:
+        user_form = RegistrationForm(request.POST, request.FILES)
+        if user_form.is_valid():
+            user = user_form.save()
+            if user:
+                login(request, user)
+                return redirect(reverse('newest'))
+            else:
+                user_form.add_error(None, "User saving error")
+    return render(request, 'registration.html', {'form': user_form})
 
 
 def ask(request):
@@ -53,5 +91,9 @@ def get_by_tag(request, tag):
     return render(request, 'search_qeustions_by_tag.html', {"questions": questions, "tag": tag})
 
 
-def logout(request):
-    return render(request, 'login.html')
+def logout_view(request):
+    logout(request)
+
+    return redirect(reverse('login'))
+
+

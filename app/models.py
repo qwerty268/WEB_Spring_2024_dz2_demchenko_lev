@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Count, QuerySet
 
+from askme_demchenko.settings import MEDIA_ROOT
+
 
 class QuestionManager(models.Manager):
 
@@ -98,12 +100,21 @@ class AnswerLike(models.Model):
         unique_together = ('user', 'answer')
 
 
+class ProfileManager(models.Manager):
+
+    def get_image(self):
+        if not self.avatar:
+            return 'static/img/test.jpg'
+        return self.avatar.url
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.PROTECT)
-    avatar = models.ImageField(null=True, blank=True)
-    nick_name = models.CharField(max_length=100, null=False, blank=False)
+    avatar = models.ImageField(null=True, blank=True, upload_to='images')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    objects = ProfileManager()
+
     def __str__(self):
-        return self.nick_name
+        return self.user.username
