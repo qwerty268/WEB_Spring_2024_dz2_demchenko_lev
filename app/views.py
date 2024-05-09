@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, QuestionForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, QuestionForm, AnswerForm
 from app.models import Question, Answer
 
 
@@ -52,8 +52,23 @@ def user_settings(request):
 
 def question(request, question_id):
     item = Question.objects.get_by_id(question_id)
-    answers = Answer.objects.filter(question=question_id)
-    return render(request, 'question_detail.html', {"question": item, "answers": answers})
+    if request.method == 'GET':
+        answers = Answer.objects.filter(question=question_id)
+        return render(request, 'question_detail.html',
+                      {"question": item, "answers": answers, 'form': AnswerForm()})
+    else:
+        answer_form = AnswerForm(request.POST)
+        if answer_form.is_valid():
+            user = request.user
+            answer_form.save_with_related_data(user, item)
+            answers = Answer.objects.filter(question=question_id)
+            return render(request, 'question_detail.html',
+                          {"question": item, "answers": answers, 'form': AnswerForm()})
+        else:
+            answers = Answer.objects.filter(question=question_id)
+            return render(request, 'question_detail.html',
+                          {"question": item, "answers": answers, 'form': answer_form})
+
 
 
 @require_http_methods(['GET', 'POST'])
@@ -102,7 +117,7 @@ def ask(request):
     else:
         question_form = QuestionForm(request.POST)
         if question_form.is_valid():
-            question_form.save_with_user(request.user)
+            question_form.save_with_related_data(request.user)
             return redirect(reverse('newest'))
         else:
             return render(request, 'add_question_page.html', {'form': question_form})

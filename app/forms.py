@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from app.models import Profile, Question
+from app.models import Profile, Question, Answer
 
 
 class LoginForm(forms.Form):
@@ -56,9 +56,23 @@ class QuestionForm(forms.ModelForm):
         model = Question
         exclude = ['user', 'created_at', 'updated_at']
 
-    def save_with_user(self, user):
+    def save_with_related_data(self, user):
         question = super().save(commit=False)
         question.user = user
         question.save()
 
         return question
+
+
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ['text']
+
+    def save_with_related_data(self, user, question):
+        answer = super().save(commit=False)
+        answer.user = user
+        answer.question = question
+        answer.save()
+
+        return answer

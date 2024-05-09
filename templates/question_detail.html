@@ -1,21 +1,20 @@
 {% extends "layouts/base.html" %}
 {% load static %}
+{% load bootstrap4 %}
 
 {% block content %}
-              {% include "components/question.html" with item=question %}
+{% include "components/question.html" with item=question %}
 
-            <hr style="border-width: 3px;">
+<hr style="border-width: 3px;">
 
-            {% for answer in answers %}
-                {% include "components/answer.html" with item=answer %}
-            {% endfor %}
+{% for answer in answers %}
+{% include "components/answer.html" with item=answer %}
+{% endfor %}
 
-            <hr style="border-width: 3px;">
-            <form action="/" method="post">
-                <label for="inputAnswer" class="form-label">Answer</label>
-                <textarea class="form-control mb-3" id="inputAnswer" rows="3"
-                          placeholder="Input your answer"></textarea>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+<hr style="border-width: 3px;">
+<form class="mb-5" method="post" action=""> {% csrf_token %}
+    {% bootstrap_form form %}
+    <button type="submit" class="btn btn-primary mb-2 mt-2">Answer</button>
+</form>
 
 {% endblock %}
