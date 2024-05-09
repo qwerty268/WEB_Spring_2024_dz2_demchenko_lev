@@ -1,14 +1,11 @@
-from django.contrib import auth
 from django.contrib.auth import authenticate, logout, login
-from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
-from app.forms import LoginForm, RegistrationForm
-from app.models import QuestionManager, Question, Answer
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, QuestionForm
+from app.models import Question, Answer
 
 
 # Create your views here.
@@ -28,13 +25,29 @@ def hot(request):
 
 
 def newest(request):
-
     page_obj = get_pagination(request, Question.objects.get_new())
     return render(request, 'new_questions.html', {"questions": page_obj})
 
 
+@require_http_methods(['GET', 'POST'])
 def user_settings(request):
-    return render(request, 'user_settings.html')
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            user = request.user
+            return render(request, 'user_settings.html',
+                          {'form': EditProfileForm(initial={'username': user.username, 'email': user.email})})
+        else:
+            return redirect(reverse('login'))
+    else:
+        edit_form = EditProfileForm(request.POST, request.FILES, instance=request.user)
+        if edit_form.is_valid():
+            user = edit_form.save()
+            if user:
+                return render(request, 'user_settings.html',
+                              {'form': EditProfileForm(initial={'username': user.username, 'email': user.email})})
+            else:
+                edit_form.add_error(None, "User updating error")
+        return render(request, 'user_settings.html', {'form': edit_form})
 
 
 def question(request, question_id):
@@ -82,8 +95,17 @@ def registration(request):
     return render(request, 'registration.html', {'form': user_form})
 
 
+@require_http_methods(['GET', 'POST'])
 def ask(request):
-    return render(request, 'add_question_page.html')
+    if request.method == 'GET':
+        return render(request, 'add_question_page.html', {'form': QuestionForm()})
+    else:
+        question_form = QuestionForm(request.POST)
+        if question_form.is_valid():
+            question_form.save_with_user(request.user)
+            return redirect(reverse('newest'))
+        else:
+            return render(request, 'add_question_page.html', {'form': question_form})
 
 
 def get_by_tag(request, tag):
@@ -93,7 +115,4 @@ def get_by_tag(request, tag):
 
 def logout_view(request):
     logout(request)
-
     return redirect(reverse('login'))
-
-

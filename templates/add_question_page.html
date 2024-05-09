@@ -1,28 +1,15 @@
 {% extends "layouts/base.html" %}
 {% load static %}
-
+{% load bootstrap4 %}
 {% block content %}
+
 <div class="d-flex flex-row align-items-center gap-4">
     <h3>New Question</h3>
 </div>
 
-
-<div class="col-md-8 col-sm-12">
-    <form class="w-75" action="/" method="post">
-        <div class="mb-3">
-            <label for="titleInput" class="form-label">Title</label>
-            <input type="text" class="form-control" id="titleInput">
-        </div>
-        <div class="mb-3">
-            <label for="textInput" class="form-label">Text</label>
-            <input type="text" class="form-control" id="textInput">
-        </div>
-        <div class="mb-3">
-            <label for="tagsInput" class="form-label">Tags</label>
-            <input type="text" class="form-control" id="tagsInput">
-        </div>
-        <button type="submit" class="btn btn-primary">ASK!</button>
-    </form>
-</div>
+<form class="mb-5" method="post" action=""> {% csrf_token %}
+    {% bootstrap_form form %}
+    <button type="submit" class="btn btn-primary mb-2 mt-2">Confirm</button>
+</form>
 
 {% endblock %}

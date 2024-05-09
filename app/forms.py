@@ -1,11 +1,7 @@
-from PIL import Image
 from django import forms
 from django.contrib.auth.models import User
-from django.core.files.uploadedfile import SimpleUploadedFile
 
-
-from app.models import Profile
-from askme_demchenko.settings import MEDIA_ROOT
+from app.models import Profile, Question
 
 
 class LoginForm(forms.Form):
@@ -22,13 +18,21 @@ class RegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'password', 'repeat_password', 'avatar']  # Добавить поле 'avatar' в форму
+        fields = ['username', 'email', 'password', 'repeat_password', 'avatar']  # Добавить поле 'avatar' в форму
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("repeat_password")
+
+        if password != confirm_password:
+            self.add_error("password", "Passwords must match")
+            self.add_error("repeat_password", "Passwords must match")
+            raise forms.ValidationError("Passwords must match")
 
     def save(self, commit=True):
         user = super().save(commit=False)
-
         user.set_password(self.cleaned_data['password'])
-
         user.save()
 
         # Создаем профиль и сохраняем avatar
@@ -37,3 +41,24 @@ class RegistrationForm(forms.ModelForm):
         profile.save()
 
         return user
+
+
+class EditProfileForm(forms.ModelForm):
+    avatar = forms.ImageField(label='Avatar', required=False)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'avatar']
+
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        exclude = ['user', 'created_at', 'updated_at']
+
+    def save_with_user(self, user):
+        question = super().save(commit=False)
+        question.user = user
+        question.save()
+
+        return question
