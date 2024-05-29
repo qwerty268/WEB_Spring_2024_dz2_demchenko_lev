@@ -50,6 +50,19 @@ class EditProfileForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'avatar']
 
+    def save(self, commit=True):
+        user = self.instance
+        user.username = self.cleaned_data['username']
+        user.email = self.cleaned_data['email']
+        user.save()
+
+        print(self.cleaned_data['avatar'])
+        profile = user.profile
+        profile.avatar = self.cleaned_data['avatar']
+        profile.save()
+
+        return user
+
 
 class QuestionForm(forms.ModelForm):
     class Meta:

@@ -39,6 +39,7 @@ def user_settings(request):
         else:
             return redirect(reverse('login'))
     else:
+        print(request.FILES)
         edit_form = EditProfileForm(request.POST, request.FILES, instance=request.user)
         if edit_form.is_valid():
             user = edit_form.save()

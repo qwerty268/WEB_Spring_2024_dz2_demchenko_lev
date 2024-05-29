@@ -7,7 +7,7 @@
     <h3>Settings: {{ user.username }}</h3>
 </div>
 
-<form class="mb-5" method="post" action=""> {% csrf_token %}
+<form class="mb-5" method="post" action="" enctype="multipart/form-data"> {% csrf_token %}
     {% bootstrap_form form %}
     <button type="submit" class="btn btn-primary mb-2 mt-2">Confirm</button>
 </form>
